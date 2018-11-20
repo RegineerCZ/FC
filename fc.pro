@@ -16,7 +16,9 @@ SOURCES += \
         main.cpp \
     renderprovider.cpp \
     common.cpp \
-    simplexnoisegenerator.cpp
+    simplexnoisegenerator.cpp \
+    tiledata.cpp \
+    mapdata.cpp
 
 RESOURCES += qml.qrc \
     images.qrc
@@ -36,4 +38,6 @@ HEADERS += \
     renderprovider.h \
     common.h \
     global.h \
-    simplexnoisegenerator.h
+    simplexnoisegenerator.h \
+    tiledata.h \
+    mapdata.h

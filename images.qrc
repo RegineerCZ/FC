@@ -3,5 +3,6 @@
         <file>images/tiles/coal.png</file>
         <file>images/tiles/copper.png</file>
         <file>images/tiles/grass.png</file>
+        <file>images/buildings/miner.png</file>
     </qresource>
 </RCC>
