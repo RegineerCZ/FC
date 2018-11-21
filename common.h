@@ -5,6 +5,8 @@
 #include <QTimer>
 #include "global.h"
 #include "renderprovider.h"
+#include "mapdata.h"
+#include "tiledata.h"
 
 class common : public QObject
 {
@@ -21,6 +23,7 @@ public:
 private:
     QTimer *_tim;
     renderProvider *_renderer;
+    mapData *_map;
 private slots:
     void timerTick();
 };

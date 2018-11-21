@@ -23,6 +23,7 @@ public:
     void mouseClick(int x, int y);
     void selectBuilding(int index);
     void changeDir();
+    mapData *getCurrentMap();
 
 private:
 

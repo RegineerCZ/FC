@@ -245,6 +245,11 @@ void renderProvider::changeDir()
     }
 }
 
+mapData *renderProvider::getCurrentMap()
+{
+    return _map;
+}
+
 void renderProvider::renderBelt(QPainter *painter, int x, int y, int dir)
 {
     painter->setPen(QColor(0xFF,0xFF,0xFF));
@@ -277,16 +282,20 @@ void renderProvider::renderMiner(QPainter *painter, int x, int y, int dir)
     int y_cen = (y*tile_size) + tile_size;
     painter->setPen(QColor(0xFF,0x80,0x80));
     if (dir == dir_UP){
-        painter->drawLine (x_cen, y_cen - (tile_size /2), x_cen - (tile_size /2), y_cen + (tile_size /2));
-        painter->drawLine (x_cen, y_cen - (tile_size /2), x_cen + (tile_size /2), y_cen + (tile_size /2));
+        painter->drawLine (x_cen + (tile_size /2), y_cen - (tile_size), x_cen, y_cen);
+        painter->drawLine (x_cen + (tile_size /2), y_cen - (tile_size), x_cen + (tile_size), y_cen);
+        painter->drawLine (x_cen, y_cen, x_cen + (tile_size), y_cen);
     } else if (dir == dir_RIGHT){
-        painter->drawLine (x_cen + (tile_size /2), y_cen, x_cen - (tile_size /2), y_cen - (tile_size /2));
-        painter->drawLine (x_cen + (tile_size /2), y_cen, x_cen - (tile_size /2), y_cen + (tile_size /2));
+        painter->drawLine (x_cen + (tile_size), y_cen + (tile_size /2), x_cen, y_cen);
+        painter->drawLine (x_cen + (tile_size), y_cen + (tile_size /2), x_cen, y_cen + (tile_size));
+        painter->drawLine (x_cen, y_cen, x_cen, y_cen + (tile_size));
     } else if (dir == dir_DOWN){
-        painter->drawLine (x_cen, y_cen + (tile_size /2), x_cen - (tile_size /2), y_cen - (tile_size /2));
-        painter->drawLine (x_cen, y_cen + (tile_size /2), x_cen + (tile_size /2), y_cen - (tile_size /2));
+        painter->drawLine (x_cen - (tile_size /2), y_cen + (tile_size), x_cen - (tile_size), y_cen);
+        painter->drawLine (x_cen - (tile_size /2), y_cen + (tile_size), x_cen, y_cen);
+        painter->drawLine (x_cen - (tile_size), y_cen, x_cen, y_cen);
     } else {
-        painter->drawLine (x_cen - (tile_size /2), y_cen, x_cen + (tile_size /2), y_cen - (tile_size /2));
-        painter->drawLine (x_cen - (tile_size /2), y_cen, x_cen + (tile_size /2), y_cen + (tile_size /2));
+        painter->drawLine (x_cen - (tile_size), y_cen - (tile_size /2), x_cen, y_cen - (tile_size));
+        painter->drawLine (x_cen - (tile_size), y_cen - (tile_size /2), x_cen, y_cen);
+        painter->drawLine (x_cen, y_cen - (tile_size), x_cen, y_cen);
     }
 }
