@@ -22,6 +22,7 @@ public:
     QList<tileData *> firstLayer();
     QList<tileData *> secondLayer();
     QList<tileData *> thirdLayer();
+    void replaceThirdLayer(QList<tileData*> data);
 
 private:
     int _seed;

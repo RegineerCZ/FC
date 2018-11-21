@@ -118,7 +118,7 @@ void mapData::basicGeneration(int seed, int width, int height)
     // TODO Later add buildings and enemy bases, doors and such
     for (int y = 0; y < height; y++){
         for (int x = 0; x < width; x++){
-            _first_layer.append (new tileData(tile_EMPTY));
+            _third_layer.append (new tileData(tile_EMPTY));
         }
     }
 
@@ -152,4 +152,10 @@ QList<tileData *> mapData::secondLayer()
 QList<tileData *> mapData::thirdLayer()
 {
     return _third_layer;
+}
+
+void mapData::replaceThirdLayer(QList<tileData *> data)
+{
+    _third_layer.clear ();
+    _third_layer.append (data);
 }

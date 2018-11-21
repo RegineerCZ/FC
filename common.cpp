@@ -23,6 +23,21 @@ void common::regenerateMap()
         _tim->start (500);
 }
 
+void common::mouseClick(int x, int y)
+{
+    _renderer->mouseClick (x, y);
+}
+
+void common::selectBuilding(int index)
+{
+    _renderer->selectBuilding (index);
+}
+
+void common::changeDir()
+{
+    _renderer->changeDir ();
+}
+
 void common::timerTick()
 {
     //_renderer->generateImage ();

@@ -16,6 +16,13 @@ tileData::tileData(int type, int resources)
     setTileResources (resources);
 }
 
+tileData::tileData(int type, int resources, int dir)
+{
+    setTileType (type);
+    setTileResources (resources);
+    setTileDirection (dir);
+}
+
 void tileData::setTileType(int type)
 {
     tile_type = type;
@@ -34,4 +41,14 @@ void tileData::setTileResources(int resources)
 int tileData::tileResources()
 {
     return tile_resources;
+}
+
+void tileData::setTileDirection(int dir)
+{
+    tile_dir = dir;
+}
+
+int tileData::tileDirection()
+{
+    return tile_dir;
 }

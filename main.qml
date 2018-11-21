@@ -14,7 +14,7 @@ Window{
         //height: 300
         anchors.fill: parent
         source: ""//"image://renderProvider/test"
-        fillMode: Image.Pad
+        fillMode: Image.Tile
         visible: true
         cache: false
         property int i: 0
@@ -60,7 +60,7 @@ Window{
             img.updateSource()
         }
         onClicked: {
-
+            com.mouseClick(mouseX, mouseY)
         }
 
 
@@ -69,10 +69,20 @@ Window{
             console.log("Key Pressed: ", event.key)
 
             if (event.key === Qt.Key_R) {
+                com.changeDir();
+                img.updateSource()
+            }
+            else if (event.key === Qt.Key_G) {
                 com.regenerateMap();
             }
-            if (event.key === Qt.Key_G) {
-                img.updateSource()
+            else if (event.key === Qt.Key_1){
+                com.selectBuilding(1)
+            }
+            else if (event.key === Qt.Key_2){
+                com.selectBuilding(2)
+            }
+            else if (event.key === Qt.Key_3){
+                com.selectBuilding(3)
             }
         }
     }

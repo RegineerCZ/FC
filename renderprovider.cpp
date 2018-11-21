@@ -5,14 +5,13 @@ renderProvider::renderProvider()
 {
     //noiseGen = new simplexNoiseGenerator();
     _map = new mapData();
-    _map->basicGeneration (0x2B7AC6E5, 100, 100);
-    _map_image = QPixmap(100,100);
+    _map->basicGeneration (0x2B7AC6E5, 30, 30);
+    _map_image = QPixmap(30,30);
     _map_image.fill(QColor(0,0,0));
 }
 
 void renderProvider::generateImage()
 {
-    int tile_size = 3;
     _map_image = QPixmap(_map->width ()*tile_size,_map->height ()*tile_size);
     _map_image.fill(QColor(0,0,0));
     QPainter painter(&_map_image);
@@ -55,7 +54,22 @@ void renderProvider::generateImage()
         //qDebug() << row;
     }
 
-    int selection_size = 2;
+    QList<tileData *> _t = _map->thirdLayer ();
+
+    for (int y = 0; y < _map->height (); y++){
+        //QString row = "";
+        for (int x = 0; x < _map->width (); x++){
+            //row = row + QString::number(_s.at ((y*_map->height ()) + x)->tileType ());
+                if (_t.at ((y*_map->width ()) + x)->tileType () == tile_BELT){
+                    renderBelt (&painter, x, y, _t.at ((y*_map->width ()) + x)->tileDirection ());
+                } else if (_t.at ((y*_map->width ()) + x)->tileType () == tile_MINER){
+                    renderMiner (&painter, x, y, _t.at ((y*_map->width ()) + x)->tileDirection ());
+                }
+        }
+        //qDebug() << row;
+    }
+
+    //int selection_size = 2;
     painter.setPen(QColor(0xFF,0x00,0x00));
     bool mouse_done = false;
     int mouse_map_x = (_mouseX / tile_size);
@@ -66,7 +80,27 @@ void renderProvider::generateImage()
         for (int x = 0; x < _map->width (); x++){
             if (mouse_map_x == x){
                 if (mouse_map_y == y){
-                    painter.drawRect (x*tile_size, y*tile_size, selection_size*tile_size, selection_size*tile_size);
+                    painter.drawRect (x*tile_size, y*tile_size, build_w*tile_size, build_h*tile_size);
+                    //Calculate center of building rect
+                    int x_cen = (x*tile_size) + ((build_w*tile_size) / 2);
+                    int y_cen = (y*tile_size) + ((build_h*tile_size) / 2);
+                    if (build_dir == dir_UP){
+                        painter.drawLine (x_cen, y_cen - (tile_size /2), x_cen - (tile_size /2), y_cen + (tile_size /2));
+                        painter.drawLine (x_cen, y_cen - (tile_size /2), x_cen + (tile_size /2), y_cen + (tile_size /2));
+                        painter.drawLine (x_cen - (tile_size /2), y_cen + (tile_size /2), x_cen + (tile_size /2), y_cen + (tile_size /2));
+                    } else if (build_dir == dir_RIGHT){
+                        painter.drawLine (x_cen + (tile_size /2), y_cen, x_cen - (tile_size /2), y_cen - (tile_size /2));
+                        painter.drawLine (x_cen + (tile_size /2), y_cen, x_cen - (tile_size /2), y_cen + (tile_size /2));
+                        painter.drawLine (x_cen - (tile_size /2), y_cen - (tile_size /2), x_cen - (tile_size /2), y_cen + (tile_size /2));
+                    } else if (build_dir == dir_DOWN){
+                        painter.drawLine (x_cen, y_cen + (tile_size /2), x_cen - (tile_size /2), y_cen - (tile_size /2));
+                        painter.drawLine (x_cen, y_cen + (tile_size /2), x_cen + (tile_size /2), y_cen - (tile_size /2));
+                        painter.drawLine (x_cen - (tile_size /2), y_cen - (tile_size /2), x_cen + (tile_size /2), y_cen - (tile_size /2));
+                    } else {
+                        painter.drawLine (x_cen - (tile_size /2), y_cen, x_cen + (tile_size /2), y_cen - (tile_size /2));
+                        painter.drawLine (x_cen - (tile_size /2), y_cen, x_cen + (tile_size /2), y_cen + (tile_size /2));
+                        painter.drawLine (x_cen + (tile_size /2), y_cen - (tile_size /2), x_cen + (tile_size /2), y_cen + (tile_size /2));
+                    }
                     mouse_done = true;
                     break;
                 }
@@ -77,8 +111,8 @@ void renderProvider::generateImage()
     int copper_res = 0;
     int coal_res = 0;
 
-    for (int y = 0; y < selection_size; y++){
-        for (int x = 0; x < selection_size; x++){
+    for (int y = 0; y < build_h; y++){
+        for (int x = 0; x < build_w; x++){
             int tile_pos = ((mouse_map_y+y)*_map->width ()) + (mouse_map_x+x);
             if (tile_pos < _s.size()){
                 tileData *_tile = _s.at (tile_pos);
@@ -159,4 +193,100 @@ void renderProvider::regenerateMap()
     int r = qrand() % 0xFFFFFFFF;
     qDebug() << "seed: "<<r;
     _map->basicGeneration (r, 100, 100);
+}
+
+void renderProvider::mouseClick(int x, int y)
+{
+    //For test we add a building at a place of click
+    int block_layed = 0;
+    int xt = x / tile_size;
+    int yt = y / tile_size;
+    QList<tileData *> _tl = _map->thirdLayer ();
+    for (int yy = 0; yy < build_h; yy++){
+        for (int xx = 0; xx < build_w; xx++){
+            int xf = xt+xx;
+            int yf = yt+yy;
+            int indx = (yf * _map->width ()) + xf;
+            if (indx < _tl.size ()){
+                if (block_layed == 0){
+                    if (build_type == 1){
+                        _tl.replace (indx, new tileData(tile_BELT,0,build_dir));
+                    } else {
+                        _tl.replace (indx, new tileData(tile_MINER,0,build_dir));
+                    }
+                } else {
+                    _tl.replace (indx, new tileData(tile_BLOCKED));
+                }
+                block_layed++;
+            }
+        }
+    }
+    _map->replaceThirdLayer (_tl);
+}
+
+void renderProvider::selectBuilding(int index)
+{
+    build_type = index;
+    if (index == 1){
+        build_w = 1;
+        build_h = 1;
+    } else {
+        build_w = 2;
+        build_h = 2;
+    }
+}
+
+void renderProvider::changeDir()
+{
+    if (build_dir < 3){
+        build_dir = build_dir + 1;
+    } else {
+        build_dir = 0;
+    }
+}
+
+void renderProvider::renderBelt(QPainter *painter, int x, int y, int dir)
+{
+    painter->setPen(QColor(0xFF,0xFF,0xFF));
+    painter->drawRect (x*tile_size, y*tile_size, tile_size, tile_size);
+    //Calculate center of building rect
+    int x_cen = (x*tile_size) + (tile_size / 2);
+    int y_cen = (y*tile_size) + (tile_size / 2);
+    painter->setPen(QColor(0x80,0x80,0xFF));
+    if (dir == dir_UP){
+        painter->drawLine (x_cen, y_cen - (tile_size /2), x_cen - (tile_size /2), y_cen + (tile_size /2));
+        painter->drawLine (x_cen, y_cen - (tile_size /2), x_cen + (tile_size /2), y_cen + (tile_size /2));
+    } else if (dir == dir_RIGHT){
+        painter->drawLine (x_cen + (tile_size /2), y_cen, x_cen - (tile_size /2), y_cen - (tile_size /2));
+        painter->drawLine (x_cen + (tile_size /2), y_cen, x_cen - (tile_size /2), y_cen + (tile_size /2));
+    } else if (dir == dir_DOWN){
+        painter->drawLine (x_cen, y_cen + (tile_size /2), x_cen - (tile_size /2), y_cen - (tile_size /2));
+        painter->drawLine (x_cen, y_cen + (tile_size /2), x_cen + (tile_size /2), y_cen - (tile_size /2));
+    } else {
+        painter->drawLine (x_cen - (tile_size /2), y_cen, x_cen + (tile_size /2), y_cen - (tile_size /2));
+        painter->drawLine (x_cen - (tile_size /2), y_cen, x_cen + (tile_size /2), y_cen + (tile_size /2));
+    }
+}
+
+void renderProvider::renderMiner(QPainter *painter, int x, int y, int dir)
+{
+    painter->setPen(QColor(0xFF,0xFF,0xFF));
+    painter->drawRect (x*tile_size, y*tile_size, 2*tile_size, 2*tile_size);
+    //Calculate center of building rect
+    int x_cen = (x*tile_size) + tile_size;
+    int y_cen = (y*tile_size) + tile_size;
+    painter->setPen(QColor(0xFF,0x80,0x80));
+    if (dir == dir_UP){
+        painter->drawLine (x_cen, y_cen - (tile_size /2), x_cen - (tile_size /2), y_cen + (tile_size /2));
+        painter->drawLine (x_cen, y_cen - (tile_size /2), x_cen + (tile_size /2), y_cen + (tile_size /2));
+    } else if (dir == dir_RIGHT){
+        painter->drawLine (x_cen + (tile_size /2), y_cen, x_cen - (tile_size /2), y_cen - (tile_size /2));
+        painter->drawLine (x_cen + (tile_size /2), y_cen, x_cen - (tile_size /2), y_cen + (tile_size /2));
+    } else if (dir == dir_DOWN){
+        painter->drawLine (x_cen, y_cen + (tile_size /2), x_cen - (tile_size /2), y_cen - (tile_size /2));
+        painter->drawLine (x_cen, y_cen + (tile_size /2), x_cen + (tile_size /2), y_cen - (tile_size /2));
+    } else {
+        painter->drawLine (x_cen - (tile_size /2), y_cen, x_cen + (tile_size /2), y_cen - (tile_size /2));
+        painter->drawLine (x_cen - (tile_size /2), y_cen, x_cen + (tile_size /2), y_cen + (tile_size /2));
+    }
 }

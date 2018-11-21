@@ -14,6 +14,9 @@ public:
     void bindRenderer(renderProvider *provider);
     Q_INVOKABLE void mousePosChanged(int x, int y);
     Q_INVOKABLE void regenerateMap();
+    Q_INVOKABLE void mouseClick(int x, int y);
+    Q_INVOKABLE void selectBuilding(int index);
+    Q_INVOKABLE void changeDir();
 
 private:
     QTimer *_tim;
