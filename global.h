@@ -20,6 +20,12 @@
 #define tile_MINER                      6
 #define tile_BLOCKED                    7
 
+// ======= I T E M S ==========================================
+#define item_COPPER_ORE                 1
+#define item_COAL_ORE                   2
+
+
+
 #define tile_MIN_INTENSITY              0.80
 
 

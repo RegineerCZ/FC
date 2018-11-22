@@ -52,3 +52,33 @@ int tileData::tileDirection()
 {
     return tile_dir;
 }
+
+void tileData::setHolderType(int i)
+{
+    holder_type = i;
+}
+
+int tileData::holderType()
+{
+    return holder_type;
+}
+
+void tileData::setHolderAmount(int i)
+{
+    holder_amount = i;
+}
+
+int tileData::holderAmount()
+{
+    return holder_amount;
+}
+
+void tileData::setHolderMax(int i)
+{
+    holder_max = i;
+}
+
+int tileData::holderMax()
+{
+    return holder_max;
+}

@@ -22,9 +22,14 @@ public:
 
 private:
     QTimer *_tim;
+    QTimer *_quick_tim;
     renderProvider *_renderer;
     mapData *_map;
+
+    void addItemToTile(tileData *src, tileData *dest, int type, int amount);
+
 private slots:
+    void quickTick();
     void timerTick();
 };
 

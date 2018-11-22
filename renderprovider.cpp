@@ -60,10 +60,28 @@ void renderProvider::generateImage()
         //QString row = "";
         for (int x = 0; x < _map->width (); x++){
             //row = row + QString::number(_s.at ((y*_map->height ()) + x)->tileType ());
-                if (_t.at ((y*_map->width ()) + x)->tileType () == tile_BELT){
-                    renderBelt (&painter, x, y, _t.at ((y*_map->width ()) + x)->tileDirection ());
-                } else if (_t.at ((y*_map->width ()) + x)->tileType () == tile_MINER){
-                    renderMiner (&painter, x, y, _t.at ((y*_map->width ()) + x)->tileDirection ());
+            tileData *tile = _t.at ((y*_map->width ()) + x);
+                if (tile->tileType () == tile_BELT){
+                    renderBelt (&painter, x, y, tile->tileDirection ());
+                    if (tile->holderAmount () > 0){
+                        painter.fillRect (x*tile_size + (tile_size*0.25), y*tile_size + (tile_size*0.25), (tile_size/2), (tile_size/2),QColor(0,0,0));
+
+                        painter.setPen(QColor(255,0,0));
+                        painter.drawText(x*tile_size + (tile_size * 2), y*tile_size+tile_size, QString::number(tile->holderAmount ()));
+                    }
+                } else if (tile->tileType () == tile_MINER){
+                    renderMiner (&painter, x, y, tile->tileDirection ());
+                    if (tile->holderAmount () > 0){
+                        painter.fillRect (x*tile_size + (tile_size*0.75), y*tile_size + (tile_size*0.75), (tile_size/2), (tile_size/2),QColor(0,0,0));
+
+                        painter.setPen(QColor(255,0,0));
+                        painter.drawText(x*tile_size + (tile_size * 2), y*tile_size+(tile_size*2), QString::number(tile->holderAmount ()));
+                    }
+                } else if (tile->holderAmount () > 0){
+                    painter.fillRect (x*tile_size + (tile_size*0.25), y*tile_size + (tile_size*0.25), (tile_size/2), (tile_size/2),QColor(0,0,0));
+
+                    painter.setPen(QColor(255,0,0));
+                    painter.drawText(x*tile_size + (tile_size * 2), y*tile_size+tile_size, QString::number(tile->holderAmount ()));
                 }
         }
         //qDebug() << row;
@@ -209,10 +227,23 @@ void renderProvider::mouseClick(int x, int y)
             int indx = (yf * _map->width ()) + xf;
             if (indx < _tl.size ()){
                 if (block_layed == 0){
+                    tileData *o = _tl.at (indx);
+                    int ht = o->holderType ();
+                    int ha = o->holderAmount ();
                     if (build_type == 1){
-                        _tl.replace (indx, new tileData(tile_BELT,0,build_dir));
+                        tileData *d = new tileData(tile_BELT,0,build_dir);
+                        if (ha > 10) ha = 10;
+                        d->setHolderType (ht);
+                        d->setHolderAmount (ha);
+                        d->setHolderMax (10);
+                        _tl.replace (indx, d);
                     } else {
-                        _tl.replace (indx, new tileData(tile_MINER,0,build_dir));
+                        tileData *d = new tileData(tile_MINER,0,build_dir);
+                        if (ha > 4) ha = 4;
+                        d->setHolderType (ht);
+                        d->setHolderAmount (ha);
+                        d->setHolderMax (4);
+                        _tl.replace (indx, d);
                     }
                 } else {
                     _tl.replace (indx, new tileData(tile_BLOCKED));
