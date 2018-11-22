@@ -14,3 +14,17 @@
 	
 
 - need to think of a system that will equaly distribute priorities
+
+
+
+
+__________________________________________________________________
+
+
+- each belt could look in all 4 directions and count how many other belts of inserters are feeding into him
+- each belt that finds more then 1 input could be marked for special update
+- when the chain is done and it's updating tile after tile in the chain it will come to tile with this flag
+- such a tile has to push his own items forward
+- such a tile should have a int in memory that tells him which of these directions has fed him last time
+- such a tile will cycle trough the directions and give everybody equal amount of updates in this priority handler
+- such a tile should always give priority to direct insertion (another belt) before indirect adding on top of a pile (inserter)
