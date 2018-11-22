@@ -1,0 +1,16 @@
+- go by x & y
+- find any belt
+- start a QList<> of positions of these belts until you get to a non-belt tile
+- start updating item positions from this non-belt tile until you reach the original betl again
+- continue looking in x & y system
+- if you find another belt look if it was updated already
+- - if it was updated skip it
+- - if it wasn't updated, create a chain until first updated or non-belt tile and update that chain
+
+- this has one problem:
+	- if you have 2 belts feeding into 1 and the same belt
+	- in this update procedure you will come to this "shared" belt always from 1 direction first
+	- this will make this side of belt feeding to have a priority
+	
+
+- need to think of a system that will equaly distribute priorities
