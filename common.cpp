@@ -8,7 +8,7 @@ common::common()
 
     _quick_tim = new QTimer();
     connect(_quick_tim, &QTimer::timeout, this, &common::quickTick);
-    _quick_tim->start (200); //TODO Make it much faster after debugging
+    _quick_tim->start (500); //TODO Make it much faster after debugging
 
 }
 
@@ -144,11 +144,56 @@ void common::quickTick()
                     // Found begging of the chain
                     int temp_pos = pos;
                     chain.clear ();
-                    chain.append (new tempBeltChain(pos));
+                    bool chaining = true;
 
-                    if (tile->tileDirection () == dir_UP){
+                    while(chaining){
+                        tileData *temp_tile = _t.at (temp_pos);
 
+                        if ((temp_tile->tileType () == tile_BELT) && (temp_tile->getUpdateStatus () == false)){
+                            chain.append (new tempBeltChain(temp_pos));
+
+                            if (tile->tileDirection () == dir_UP){
+                                temp_pos = temp_pos - _map->width ();
+                            } else if (tile->tileDirection () == dir_LEFT) {
+                                temp_pos = temp_pos -1;
+                            } else if (tile->tileDirection () == dir_DOWN){
+                                temp_pos = temp_pos + _map->width ();
+                            } else {
+                                temp_pos = temp_pos +1;
+                            }
+
+                            //TODO Treba skontrolovat ze dana pozicia existuje (ze nejsi mimo mapu)
+
+                        } else {
+                            // End of chain found
+                            chaining = false;
+                        }
                     }
+
+                    while (chain.size () > 0){
+                        //If any belts found, go from futherst one and update item positions
+                        int temp_pos = chain.last ()->pos;
+                        tileData *temp_tile = _t.at (temp_pos);
+                        chain.removeLast ();
+
+                        if (temp_tile->holderAmount () > 0){
+                            int target_pos = temp_pos;
+                            if (temp_tile->tileDirection () == dir_UP){
+                                target_pos = target_pos - _map->width ();
+                            } else if (temp_tile->tileDirection () == dir_LEFT){
+                                target_pos = target_pos -1;
+                            } else if (temp_tile->tileDirection () == dir_DOWN){
+                                target_pos = target_pos + _map->width ();
+                            } else {
+                                target_pos = target_pos +1;
+                            }
+
+                            //TODO Treba skontrolovat ze dana pozicia existuje (ze nejsi mimo mapu)
+                            //TODO Dorobit
+
+                        }
+                    }
+
                 }
             }
         }
