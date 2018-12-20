@@ -8,6 +8,13 @@
 #include "mapdata.h"
 #include "tiledata.h"
 
+class tempBeltChain:
+{
+public:
+    tempBeltChain(int p);
+    int pos = 0;
+};
+
 class common : public QObject
 {
     Q_OBJECT

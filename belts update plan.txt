@@ -1,7 +1,7 @@
 - go by x & y
 - find any belt
 - start a QList<> of positions of these belts until you get to a non-belt tile
-- start updating item positions from this non-belt tile until you reach the original betl again
+- start updating item positions from this non-belt tile until you reach the original belt again
 - continue looking in x & y system
 - if you find another belt look if it was updated already
 - - if it was updated skip it
@@ -16,6 +16,8 @@
 - need to think of a system that will equaly distribute priorities
 
 
+
+-chain has to end even if it finds already updated belt, not just a non-belt tile
 
 
 __________________________________________________________________

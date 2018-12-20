@@ -82,3 +82,28 @@ int tileData::holderMax()
 {
     return holder_max;
 }
+
+void tileData::setUpdated()
+{
+    updated = true;
+}
+
+void tileData::resetUpdated()
+{
+    updated = false;
+}
+
+bool tileData::getUpdateStatus()
+{
+    return updated;
+}
+
+void tileData::setLastFeedDirection(int dir)
+{
+    last_fed_direction = dir;
+}
+
+int tileData::getLastFedDirection()
+{
+    return last_fed_direction;
+}

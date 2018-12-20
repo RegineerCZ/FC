@@ -25,6 +25,11 @@ public:
     int holderAmount();
     void setHolderMax(int i);
     int holderMax();
+    void setUpdated();
+    void resetUpdated();
+    bool getUpdateStatus();
+    void setLastFeedDirection(int dir);
+    int getLastFedDirection();
 
 private:
     int tile_type = tile_EMPTY;
@@ -33,6 +38,8 @@ private:
     int holder_type = 0;
     int holder_amount = 0;
     int holder_max = 1;
+    bool updated = false;
+    int last_fed_direction = dir_UP;
 };
 
 #endif // TILEDATA_H

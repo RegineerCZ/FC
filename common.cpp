@@ -116,6 +116,23 @@ void common::quickTick()
     QList<tileData *> _s = _map->secondLayer ();
     QList<tileData *> _t = _map->thirdLayer ();
 
+    for (int i = 0; i < _t.size(); i++){
+        tileData *tile = _t.at (i);
+        tile->resetUpdated ();
+        _t.replace (i, tile);
+    }
+    for (int i = 0; i < _s.size(); i++){
+        tileData *tile = _s.at (i);
+        tile->resetUpdated ();
+        _t.replace (i, tile);
+    }
+    for (int i = 0; i < _f.size(); i++){
+        tileData *tile = _f.at (i);
+        tile->resetUpdated ();
+        _t.replace (i, tile);
+    }
+
+    QList<tempBeltChain *> chain = QList<tempBeltChain *>();
     // First we want to find first link in belt chains
 
     for(int y = 0; y < _map->height (); y++){
@@ -124,7 +141,14 @@ void common::quickTick()
             if (pos < _t.size()){
                 tileData *tile = _t.at (pos);
                 if (tile->tileType () == tile_BELT){
+                    // Found begging of the chain
+                    int temp_pos = pos;
+                    chain.clear ();
+                    chain.append (new tempBeltChain(pos));
 
+                    if (tile->tileDirection () == dir_UP){
+
+                    }
                 }
             }
         }
@@ -206,4 +230,9 @@ void common::timerTick()
             }
         }
     }
+}
+
+tempBeltChain::tempBeltChain(int p)
+{
+    pos = p;
 }
